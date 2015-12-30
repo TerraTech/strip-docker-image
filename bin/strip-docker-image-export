@@ -63,7 +63,7 @@ export EXPORT_DIR=/export
 
 function usage() {
 	echo "usage: $(basename $0) [-v] [-d export-dir ] [-p package | -f file]" >&2
-	echo "	$@" >&2
+	echo "  $@" >&2
 }
 
 function parse_commandline() {
@@ -77,7 +77,7 @@ function parse_commandline() {
 		    PACKAGES="$PACKAGES $OPTARG"
 		    ;;
 		f)
-		    FILES="$FILES $OPTARG"
+		    FILES="$FILES $(printf "${OPTARG}")"
 		    ;;
 		d)
 		    EXPORT_DIR="$OPTARG"
