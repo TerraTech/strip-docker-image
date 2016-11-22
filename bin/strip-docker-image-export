@@ -101,6 +101,7 @@ function parse_commandline() {
 }
 
 function print_file() {
+        test -e $EXPORT_DIR/file_list || touch $EXPORT_DIR/file_list
 		if [ -e "$1" ] ; then
 			test -n "$VERBOSE" && echo "INFO: analysing file file '$1'" >&2
 			if grep -Fxq "$1" $EXPORT_DIR/file_list
@@ -166,8 +167,6 @@ function list_all_packages() {
 }
 
 parse_commandline "$@"
-
-cp -f /dev/null $EXPORT_DIR/file_list
 
 tar czf - $(
 
