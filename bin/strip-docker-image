@@ -130,27 +130,31 @@ docker run --rm -v $PWD/$DIR/export:/export \
 	  /mybin/strip-docker-image-export -d /export $VERBOSE $PACKAGES $(for f in ${FILES}; do echo -n " -f $f";done )
 
 if [ -n "$USE_UPX" ]; then
-    find $DIR/export -type f -exec file -i '{}' \; \
-        | grep "application/x-executable" \
-        | cut -d: -f1 \
-        | xargs -I binary -n1 upx $VERBOSE --best binary
 
-    for lib in $(find $DIR/export -type f -exec file -i '{}' \; \
-                    | grep "application/x-sharedlib" \
-                    | cut -d: -f1 ); do
+    function runUpx {
+        local file=$1
+         # -f is needed for shared-libs
+        local upx_cmd='upx -f --best -q'
 
-        if [ -x "$lib" ]; then
+        if [ -x "$file" ]; then
                set +e
-               upx -f $VERBOSE --best $lib
+               $upx_cmd $file
                set -e
         else
-               chmod u+x $lib
+               chmod u+x $file
                set +e
-               upx -f $VERBOSE --best $lib
+               $upx_cmd $file
                set -e
-               chmod u-x $lib
+               chmod u-x $file
         fi
-    done
+    }
+    export -f runUpx
+
+    cpu_cores=$(cat /proc/cpuinfo  | grep ^processor | wc -l)
+    find $DIR/export -type f -exec file -i '{}' \; \
+        | grep -E "application/x-executable|application/x-sharedlib" \
+        | cut -d: -f1 \
+        | xargs -n1 --max-procs=${cpu_cores} -I binary bash -c 'runUpx binary'
 fi
 
 cat > $DIR/Dockerfile <<!
