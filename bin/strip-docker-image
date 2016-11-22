@@ -164,7 +164,8 @@ CMD=$(docker inspect --format='{{if .Config.Cmd}}CMD {{json .Config.Cmd}}{{end}}
 [ -z "$ENTRYPOINT" ] || echo $ENTRYPOINT >> $DIR/Dockerfile
 [ -z "$CMD" ] || echo $CMD >> $DIR/Dockerfile
 
-cd $DIR
+pushd $DIR
 docker build --no-cache -t $TARGET_IMAGE_NAME .
+popd
 
 rm -rf $DIR
