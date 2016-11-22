@@ -117,7 +117,7 @@ DIR=strip-docker-image-$$
 mkdir -p $DIR/export
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
-docker run -v $PWD/$DIR/export:/export \
+docker run --rm -v $PWD/$DIR/export:/export \
 	  -v $SCRIPT_DIR:/mybin \
 	  --entrypoint="/bin/bash" \
 	  $IMAGE_NAME \
