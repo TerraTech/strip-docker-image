@@ -140,10 +140,14 @@ if [ -n "$USE_UPX" ]; then
                     | cut -d: -f1 ); do
 
         if [ -x "$lib" ]; then
+               set +e
                upx -f $VERBOSE --best $lib
+               set -e
         else
                chmod u+x $lib
+               set +e
                upx -f $VERBOSE --best $lib
+               set -e
                chmod u-x $lib
         fi
     done
