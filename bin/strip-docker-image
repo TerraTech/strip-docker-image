@@ -123,6 +123,7 @@ parse_commandline "$@"
 DIR=strip-docker-image-$$
 mkdir -p $DIR/export
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+#"
 
 docker run \
       --rm \
