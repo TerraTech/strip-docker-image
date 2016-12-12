@@ -7,6 +7,7 @@ This utilities strips everything you do not need from an image and create a new 
 						-t target-image-name
 						[-p package]
 						[-f file]
+						[-r file]
 						[-x expose-port]
 						[-v]
 						[-u]
@@ -16,6 +17,7 @@ This utilities strips everything you do not need from an image and create a new 
 	-t target-image-name	the image name of the stripped image
 	-p package				package to include from image, multiple -p allowed.
 	-f file					file to include from image, multiple -f allowed.
+	-r file					file to remove from image, multiple -r allowed.
 	-x port					to expose.
 	-v						verbose.
 	-u                      compress executables and libs with upx (need to be installed)
