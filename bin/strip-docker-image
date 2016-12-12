@@ -13,6 +13,7 @@ set -e -o pipefail
 #	-t target-image-name	the image name of the stripped image
 #	-p package		package to include from image, multiple -p allowed.
 #	-f file			file to include from image, multiple -f allowed.
+#	-r file			files to remove, useful when using -p package or globbing
 #	-x port			to expose.
 #	-v			verbose
 #
@@ -63,8 +64,13 @@ function usage() {
 	echo "	$@" >&2
 }
 
+#allows for >1 char separator + auto trim trailing space
+function join() {
+	local SEP="$1";	shift; echo $(printf -- "$SEP %s " "$@")
+}
+
 function parse_commandline() {
-	while getopts "vi:t:p:f:x:u" OPT; do
+	while getopts "vi:r:t:p:f:x:u" OPT; do
 	    case "$OPT" in
 		v)
 		    VERBOSE=-v
@@ -77,6 +83,9 @@ function parse_commandline() {
 		    ;;
 		i)
 		    IMAGE_NAME="$OPTARG"
+		    ;;
+		r)
+		    FILES_RM+=" $(printf "${OPTARG}")"
 		    ;;
 		t)
 		    TARGET_IMAGE_NAME="$OPTARG"
@@ -110,7 +119,7 @@ function parse_commandline() {
 		usage "Missing -p or -f options"
 		exit 1
 	fi
-	export PACKAGES FILES VERBOSE USE_UPX
+	export PACKAGES FILES FILES_RM VERBOSE USE_UPX
 }
 
 if [ $UID != 0 ] ; then
@@ -131,7 +140,7 @@ docker run \
 	  --volume $SCRIPT_DIR:/mybin \
 	  --entrypoint="/bin/bash" \
 	  $IMAGE_NAME \
-	  /mybin/strip-docker-image-export -d /export $VERBOSE $PACKAGES $(for f in ${FILES}; do echo -n " -f $f";done )
+	  /mybin/strip-docker-image-export -d /export $VERBOSE $PACKAGES $(join '-f' $FILES) $(join '-r' $FILES_RM)
 
 if [ -n "$USE_UPX" ]; then
 
