@@ -13,7 +13,7 @@ set -e
 #	-d export-directory	to copy content to, defaults to /export.
 #	-p package		package to include from image, multiple -p allowed.
 #	-f file			file to include from image, multiple -f allowed.
-#	-r file			files to remove, useful when using -p package or globbing
+#	-r file			files to remove, useful when using -p package or -f globbing
 #	-v			verbose
 #
 # DESCRIPTION

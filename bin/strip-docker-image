@@ -13,7 +13,7 @@ set -e -o pipefail
 #	-t target-image-name	the image name of the stripped image
 #	-p package		package to include from image, multiple -p allowed.
 #	-f file			file to include from image, multiple -f allowed.
-#	-r file			files to remove, useful when using -p package or globbing
+#	-r file			files to remove, useful when using -p package or -f globbing
 #	-x port			to expose.
 #	-v			verbose
 #
