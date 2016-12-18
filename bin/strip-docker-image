@@ -72,7 +72,7 @@ function parse_commandline() {
 		    PACKAGES="$PACKAGES -p $OPTARG"
 		    ;;
 		f)
-		    FILES=" $(printf "${OPTARG}")"
+		    FILES="${FILES} $(printf "${OPTARG}")"
 		    ;;
 		i)
 		    IMAGE_NAME="$OPTARG"
