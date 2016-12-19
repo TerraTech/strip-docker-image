@@ -76,7 +76,7 @@ function parse_commandline() {
 		    VERBOSE=v
 		    ;;
 		p)
-		    PACKAGES="$PACKAGES $OPTARG"
+		    PACKAGES+=" $OPTARG"
 		    ;;
 		f)
 		    FILES="$FILES $(printf "${OPTARG}")"

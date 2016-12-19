@@ -70,7 +70,7 @@ function parse_commandline() {
 		    VERBOSE=-v
 		    ;;
 		p)
-		    PACKAGES="$PACKAGES -p $OPTARG"
+		    PACKAGES+=" -p $OPTARG"
 		    ;;
 		f)
 		    FILES="${FILES} $(printf "${OPTARG}")"
@@ -82,7 +82,7 @@ function parse_commandline() {
 		    TARGET_IMAGE_NAME="$OPTARG"
 		    ;;
 		x)
-		    EXPOSE_PORTS="$EXPOSE_PORTS $OPTARG"
+		    EXPOSE_PORTS+=" $OPTARG"
 		    ;;
 		u)
 		    USE_UPX=1
