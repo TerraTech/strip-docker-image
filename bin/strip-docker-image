@@ -59,6 +59,7 @@ set -e -o pipefail
 
 function usage() {
 	echo "usage: $(basename $0) -i image-name -t stripped-image-name [-p package | -f file] [-v -u]" >&2
+	echo " (for more see the readme)"
 	echo "	$@" >&2
 }
 
