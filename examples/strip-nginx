@@ -1,5 +1,5 @@
 #!/bin/bash
-../bin/strip-docker-image -i nginx -t stripped-nginx  \
+../bin/strip-docker-image -i nginx -t test_stripped-nginx  \
 	       -x 80 \
   -p nginx \
   -f /etc/passwd \
