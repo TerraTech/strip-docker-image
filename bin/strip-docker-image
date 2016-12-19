@@ -6,7 +6,7 @@ set -e -o pipefail
 # strip-docker-image - strips the bare essentials from an image and exports them
 #
 # SYNOPSIS
-#	strip-docker-image -i image-name -t target-image-name -t [-p package | -f file] [-x expose-port] [-v] 
+#	strip-docker-image -i image-name -t target-image-name -t [-p package | -r file | -f file] [-x expose-port] [-v]
 #
 # OPTIONS
 #	-i image-name		to strip
@@ -59,7 +59,7 @@ set -e -o pipefail
 #
 
 function usage() {
-	echo "usage: $(basename $0) -i image-name -t stripped-image-name [-p package | -f file] [-v -u]" >&2
+	echo "usage: $(basename $0) -i image-name -t stripped-image-name [-p package | -r file | -f file] [-v -u]" >&2
 	echo " (for more see the readme)"
 	echo "	$@" >&2
 }

@@ -6,7 +6,7 @@ set -e
 #	strip-docker-image-export  - exports the bare essentials from a Docker image
 #
 # SYNOPSIS
-#	strip-docker-image-export  [-d export-dir ] [-p package | -f file] [-v]
+#	strip-docker-image-export  [-d export-dir ] [-p package | -r file | -f file] [-v]
 #
 #
 # OPTIONS
@@ -65,7 +65,7 @@ set -e
 export EXPORT_DIR=/export
 
 function usage() {
-	echo "usage: $(basename $0) [-v] [-d export-dir ] [-p package | -f file]" >&2
+	echo "usage: $(basename $0) [-v] [-d export-dir ] [-p package | -r file | -f file]" >&2
 	echo "  $@" >&2
 }
 
