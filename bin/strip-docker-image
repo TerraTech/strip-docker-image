@@ -66,6 +66,7 @@ function usage() {
 
 #allows for >1 char separator + auto trim trailing space
 function join() {
+	[[ -z "$2" ]] && return	# don't join if only SEP is passed
 	local SEP="$1";	shift; echo $(printf -- "$SEP %s " "$@")
 }
 
