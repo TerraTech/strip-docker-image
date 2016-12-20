@@ -103,20 +103,20 @@ function parse_commandline() {
 }
 
 function print_file() {
-        test -e $EXPORT_DIR/file_list || touch $EXPORT_DIR/file_list
+        [[ -e $EXPORT_DIR/file_list ]] || touch $EXPORT_DIR/file_list
 		if [ -e "$1" ] ; then
-			test -n "$VERBOSE" && echo "INFO: analysing file file '$1'" >&2
+			[[ -n "$VERBOSE" ]] && echo "INFO: analysing file file '$1'" >&2
 			if grep -Fxq "$1" $EXPORT_DIR/file_list
 			then
 				echo "$1" > /dev/null
-				test -n "$VERBOSE" && echo "INFO: ignoring already exists file '$1'" >&2
+				[[ -n "$VERBOSE" ]] && echo "INFO: ignoring already exists file '$1'" >&2
 			else
 				echo "$1"
 				echo "$1" >> $EXPORT_DIR/file_list
-				test -n "$VERBOSE" && echo "INFO: adding file '$1'" >&2
+				[[ -n "$VERBOSE" ]] && echo "INFO: adding file '$1'" >&2
 			fi
 		else
-			test -n "$VERBOSE" && echo "INFO: ignoring not existent file '$1'" >&2
+			[[ -n "$VERBOSE" ]] && echo "INFO: ignoring not existent file '$1'" >&2
 		fi
 
 		if [ -s "$1" ] ; then
@@ -139,12 +139,12 @@ function list_dependencies() {
 				/usr/bin/ldd "$FILE" | \
 				awk '/statically/{next;} /=>/ { print $3; next; } { print $1 }' | \
 				while read LINE ; do
-					test -n "$VERBOSE" && echo "INFO: including $LINE" >&2
+					[[ -n "$VERBOSE" ]] && echo "INFO: including $LINE" >&2
 					print_file "$LINE"
 				done
 			fi
 		else
-			test -n "$VERBOSE" && echo "INFO: ignoring not existent file $FILE" >&2
+			[[ -n "$VERBOSE" ]] && echo "INFO: ignoring not existent file $FILE" >&2
 		fi
 	done
 }
@@ -175,7 +175,7 @@ tar czf - $(
 	(
 	list_all_packages $PACKAGES
 	list_dependencies $FILES
-	)  | sort -u | uniq \
+	)  | sort -u \
 	| grep -v /usr/share/doc \
 	| grep -v /usr/share/man
 
