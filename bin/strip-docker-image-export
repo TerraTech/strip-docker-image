@@ -6,13 +6,14 @@ set -e
 #	strip-docker-image-export  - exports the bare essentials from a Docker image
 #
 # SYNOPSIS
-#	strip-docker-image-export  [-d export-dir ] [-p package | -f file] [-v]
+#	strip-docker-image-export  [-d export-dir ] [-p package | -r file | -f file] [-v]
 #
 #
 # OPTIONS
 #	-d export-directory	to copy content to, defaults to /export.
 #	-p package		package to include from image, multiple -p allowed.
 #	-f file			file to include from image, multiple -f allowed.
+#	-r file			files to remove, useful when using -p package or -f globbing
 #	-v			verbose
 #
 # DESCRIPTION
@@ -64,13 +65,13 @@ set -e
 export EXPORT_DIR=/export
 
 function usage() {
-	echo "usage: $(basename $0) [-v] [-d export-dir ] [-p package | -f file]" >&2
+	echo "usage: $(basename $0) [-v] [-d export-dir ] [-p package | -r file | -f file]" >&2
 	echo "  $@" >&2
 }
 
 function parse_commandline() {
 
-	while getopts "vp:f:d:" OPT; do
+	while getopts "vp:f:d:r:" OPT; do
 	    case "$OPT" in
 		v)
 		    VERBOSE=v
@@ -79,7 +80,10 @@ function parse_commandline() {
 		    PACKAGES+=" $OPTARG"
 		    ;;
 		f)
-		    FILES="$FILES $(printf "${OPTARG}")"
+		    FILES+=" $(printf "${OPTARG}")"
+		    ;;
+		r)
+		    FILES_RM+=" --exclude=$(printf "${OPTARG#/}")"
 		    ;;
 		d)
 		    EXPORT_DIR="$OPTARG"
@@ -179,4 +183,4 @@ tar czf - $(
 	| grep -v /usr/share/doc \
 	| grep -v /usr/share/man
 
-) | ( cd $EXPORT_DIR ; tar -xzh${VERBOSE}f - )
+) | ( cd $EXPORT_DIR ; tar ${FILES_RM} -xzh${VERBOSE}f - )
