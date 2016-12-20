@@ -6,13 +6,14 @@ set -e -o pipefail
 # strip-docker-image - strips the bare essentials from an image and exports them
 #
 # SYNOPSIS
-#	strip-docker-image -i image-name -t target-image-name -t [-p package | -f file] [-x expose-port] [-v] 
+#	strip-docker-image -i image-name -t target-image-name -t [-p package | -r file | -f file] [-x expose-port] [-v]
 #
 # OPTIONS
 #	-i image-name		to strip
 #	-t target-image-name	the image name of the stripped image
 #	-p package		package to include from image, multiple -p allowed.
 #	-f file			file to include from image, multiple -f allowed.
+#	-r file			files to remove, useful when using -p package or -f globbing
 #	-x port			to expose.
 #	-v			verbose
 #
@@ -58,13 +59,19 @@ set -e -o pipefail
 #
 
 function usage() {
-	echo "usage: $(basename $0) -i image-name -t stripped-image-name [-p package | -f file] [-v -u]" >&2
+	echo "usage: $(basename $0) -i image-name -t stripped-image-name [-p package | -r file | -f file] [-v -u]" >&2
 	echo " (for more see the readme)"
 	echo "	$@" >&2
 }
 
+#allows for >1 char separator + auto trim trailing space
+function join() {
+	[[ -z "$2" ]] && return	# don't join if only SEP is passed
+	local SEP="$1";	shift; echo $(printf -- "$SEP %s " "$@")
+}
+
 function parse_commandline() {
-	while getopts "vi:t:p:f:x:u" OPT; do
+	while getopts "vi:r:t:p:f:x:u" OPT; do
 	    case "$OPT" in
 		v)
 		    VERBOSE=-v
@@ -77,6 +84,9 @@ function parse_commandline() {
 		    ;;
 		i)
 		    IMAGE_NAME="$OPTARG"
+		    ;;
+		r)
+		    FILES_RM+=" $(printf "${OPTARG}")"
 		    ;;
 		t)
 		    TARGET_IMAGE_NAME="$OPTARG"
@@ -110,7 +120,7 @@ function parse_commandline() {
 		usage "Missing -p or -f options"
 		exit 1
 	fi
-	export PACKAGES FILES VERBOSE USE_UPX
+	export PACKAGES FILES FILES_RM VERBOSE USE_UPX
 }
 
 if [ $UID != 0 ] ; then
@@ -123,6 +133,7 @@ parse_commandline "$@"
 DIR=strip-docker-image-$$
 mkdir -p $DIR/export
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+#"
 
 docker run \
       --rm \
@@ -130,7 +141,7 @@ docker run \
 	  --volume $SCRIPT_DIR:/mybin \
 	  --entrypoint="/bin/bash" \
 	  $IMAGE_NAME \
-	  /mybin/strip-docker-image-export -d /export $VERBOSE $PACKAGES $(for f in ${FILES}; do echo -n " -f $f";done )
+	  /mybin/strip-docker-image-export -d /export $VERBOSE $PACKAGES $(join '-f' $FILES) $(join '-r' $FILES_RM)
 
 if [ -n "$USE_UPX" ]; then
 
