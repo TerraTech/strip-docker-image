@@ -4,22 +4,22 @@ This utilities strips everything you do not need from an image and create a new 
 
 ## Synopsis
 	strip-docker-image 	-i image-name
-						-t target-image-name
-						[-p package]
-						[-f file]
-						[-r file]
-						[-x expose-port]
-						[-v]
-						[-u]
+                            -t target-image-name
+                            [-p package]
+                            [-f file]
+                            [-r file]
+                            [-x expose-port]
+                            [-v]
+                            [-u]
 
 ## Options
-	-i image-name			to strip
+	-i image-name           to strip
 	-t target-image-name	the image name of the stripped image
-	-p package				package to include from image, multiple -p allowed.
-	-f file					file to include from image, multiple -f allowed.
-	-r file					file to remove from image, multiple -r allowed.
-	-x port					to expose.
-	-v						verbose.
+	-p package              package to include from image, multiple -p allowed.
+	-f file                 file to include from image, multiple -f allowed.
+	-r file                 file to remove from image, multiple -r allowed.
+	-x port                 to expose.
+	-v                      verbose.
 	-u                      compress executables and libs with upx (need to be installed)
 
 ## Description
@@ -34,20 +34,21 @@ Why is this useful?
 The following example strips the nginx installation from the default NGiNX docker image,
 
 ```
-strip-docker-image -i nginx -t stripped-nginx  \
-						   -x 80 \
-						   -p nginx  \
-						   -f /etc/passwd \
-						   -f /etc/group \
-						   -f '/lib/*/libnss*' \
-						   -f /bin/ls \
-						   -f /bin/cat \
-						   -f /bin/sh \
-						   -f /bin/mkdir \
-						   -f /bin/ps \
-						   -f /var/run \
-						   -f /var/log/nginx \
-						   -f /var/cache/nginx
+strip-docker-image  -i nginx \
+                    -t stripped-nginx  \
+                    -x 80 \
+                    -p nginx  \
+                    -f /etc/passwd \
+                    -f /etc/group \
+                    -f '/lib/*/libnss*' \
+                    -f /bin/ls \
+                    -f /bin/cat \
+                    -f /bin/sh \
+                    -f /bin/mkdir \
+                    -f /bin/ps \
+                    -f /var/run \
+                    -f /var/log/nginx \
+                    -f /var/cache/nginx
 ```
 Aside from the nginx package, I have added the files /etc/passwd, /etc/group and /lib/*/libnss* shared libraries
 are necessary for getpwnam() to work correctly.
