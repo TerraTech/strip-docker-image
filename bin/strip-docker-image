@@ -133,7 +133,6 @@ parse_commandline "$@"
 DIR=strip-docker-image-$$
 mkdir -p $DIR/export
 SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-#"
 
 docker run \
       --rm \
@@ -141,7 +140,9 @@ docker run \
 	  --volume $SCRIPT_DIR:/mybin \
 	  --entrypoint="/bin/bash" \
 	  $IMAGE_NAME \
-	  /mybin/strip-docker-image-export -d /export $VERBOSE $PACKAGES $(join '-f' $FILES) $(join '-r' $FILES_RM)
+	  /mybin/strip-docker-image-export -d /export $VERBOSE $PACKAGES \
+	        $(join '-f' $FILES) \
+	        $(join '-r' $FILES_RM)
 
 if [ -n "$USE_UPX" ]; then
 
